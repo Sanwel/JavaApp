@@ -1,8 +1,9 @@
 pipeline {
     agent any
+node {
 def sonarHome = tool name: 'SonarQube', type: 'hudson.plugind.sonar.SonarRunnerInstallation'
-def mvnHome = tool name: 'maven'
-String Olen = ""
+mvnHome = tool 'maven'
+String Olen = " "
     stages {     
         try{
             stage('Git-Checkout') {
@@ -12,7 +13,9 @@ String Olen = ""
                 sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
             }
             stage ('SonarQube testing') {
-                sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.sources=src/"
+                withSonarQubeEnv('sonarqube') {
+                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.sources=src/main/java/rd/pingable/"
+                }
             }
             stage ('Dockerize') {
                 sh '''docker build . -t myapp:1
@@ -37,10 +40,12 @@ String Olen = ""
 }catch (all) {
 mail bcc: '', body: '''"Error" 
 shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
+currentBuild.result = 'FAILURE'
 } finally {
 
     sh 'docker rm -f myapp:1'
     deleteDir()
+}
 }
 }
 }
