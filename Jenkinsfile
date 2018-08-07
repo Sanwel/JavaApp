@@ -11,8 +11,8 @@ String Olen = " "
                 sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
             }
             stage ('SonarQube testing') {
-                withSonarQubeEnv('sonarqube') {
-                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.sources=src/main/java/rd/pingable/"
+                withSonarQubeEnv('SonarQube') {
+                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=JavaApp -Dsonar.projectName=JavaApp -Dsonar.sources=src/main/java/rd/pingable/"
                 }
             }
             stage ('Dockerize') {
