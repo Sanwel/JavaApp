@@ -1,5 +1,5 @@
 node ("master") {
-def sonarHome = tool name: 'SonarQube', type: 'hudson.plugind.sonar.SonarRunnerInstallation'
+def sonarHome = tool name: 'sonarqube', type: 'hudson.plugind.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
 String Olen = " "
     stages {     
