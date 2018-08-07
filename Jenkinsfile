@@ -11,7 +11,7 @@ String Olen = " "
             }
             stage ('SonarQube testing') {
                 withSonarQubeEnv('SonarQube') {
-                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=JavaApp -Dsonar.projectName=JavaApp -Dsonar.sources=src/main/java/rd/pingable/"
+                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=JavaApp -Dsonar.projectName=JavaApp -Dsonar.sources=src/"
                 }
             }
             stage ('Dockerize') {
