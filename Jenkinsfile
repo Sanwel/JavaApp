@@ -1,6 +1,4 @@
-pipeline {
-    agent any
-node {
+node ("master") {
 def sonarHome = tool name: 'SonarQube', type: 'hudson.plugind.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
 String Olen = " "
@@ -45,7 +43,6 @@ currentBuild.result = 'FAILURE'
 
     sh 'docker rm -f myapp:1'
     deleteDir()
-}
 }
 }
 }
