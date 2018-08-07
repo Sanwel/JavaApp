@@ -26,7 +26,7 @@ docker run -d -it -p 8080:8080 myapp:1'''
             }
         }
         stage('Mail'){
-            if(Olen = "HTTP/1.1 200 OK") {
+            if(Olen) {
                 println Olen
                 mail bcc: '', body: '''"Success" 
                 shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
