@@ -1,8 +1,7 @@
 node ("master") {
 def sonarHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
-String Olen = " "
-    stages {     
+String Olen = " " 
         try{
             stage('Git-Checkout') {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6da246df-c194-4f83-bdfa-9edee7ca39a2', url: 'https://github.com/Sanwel/JavaApp']]])
@@ -43,6 +42,5 @@ currentBuild.result = 'FAILURE'
 
     sh 'docker rm -f myapp:1'
     deleteDir()
-}
 }
 }
