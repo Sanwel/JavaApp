@@ -10,11 +10,11 @@ mvnHome = tool 'maven'
             stage ('Build') {
                 sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
             }
-            stage ('SonarQube testing') {
+/*            stage ('SonarQube testing') {
                 withSonarQubeEnv('sonarqube') {
                     sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.projectVersion=$PROJECT_VERSION -Dsonar.sources=src/main/java/rd/pingable/rest/"
                 }
-            }
+            }*/
             stage ('Dockerize') {
                 sh '''docker build . -t myapp:1
                 docker run -d -it -p 8080:8080 myapp:1'''   
