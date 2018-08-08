@@ -39,8 +39,8 @@ mvnHome = tool 'maven'
                     shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
                 }else {
                       System.exit(0)
-                }*/
-            }           
+                }
+            }*/           
 }catch (all) {
 mail bcc: '', body: '''"Error" 
 shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
