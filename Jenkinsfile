@@ -27,6 +27,7 @@ mvnHome = tool 'maven'
                     println System.currentTimeMillis()
                     println end_time
                     def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
+                    println Curl
                     Response = Curl[0..11]
                     println Response
                 }
