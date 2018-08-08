@@ -37,14 +37,15 @@ mvnHome = tool 'maven'
                 if(Response.equals("HTTP/1.1 200")) {
                     println Olen
                     shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
-                    mail bcc: '', body: '${shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
+                    println shortCommit
+                    mail bcc: '', body: 'Success', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
                 }else {
                       System.exit(1)
                 }
             }           
 }catch (all) {
 shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
-mail bcc: '', body: '${shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
+mail bcc: '', body: 'Error', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
 currentBuild.result = 'FAILURE'
 }finally {
 
