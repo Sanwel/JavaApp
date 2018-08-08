@@ -20,6 +20,7 @@ mvnHome = tool 'maven'
                 docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   
             } 
             stage('Docker Check') {
+                long startTime = System.currentTimeMillis();
                 while(Response!="HTTP/1.1 200" ||(System.currentTimeMillis()-startTime)<20000) {
                     def Curl = "curl -I http://10.28.12.209:8080".execute().text
                     Response = Curl[0..11]
