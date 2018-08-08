@@ -17,7 +17,7 @@ mvnHome = tool 'maven'
             }*/
             stage ('Dockerize') {
                 sh '''docker build . -t myapp:1
-                docker run -d -it -p 8080:8080 myapp:1'''   
+                docker run -d -it -p 8181:8080 myapp:1'''   
             } 
             stage('Docker Check') {
                 while(Response!="HTTP/1.1 200" ||(System.currentTimeMillis()-startTime)<60000) {
