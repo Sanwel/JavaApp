@@ -38,7 +38,12 @@ mvnHome = tool 'maven'
                     println Response
                     env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
                     println env.shortCommit
-                    mail bcc: '', body: 'Success ${env.shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
+                    String subject = "${env.JOB_NAME} was " + currentBuild.result.toString();
+                    String email_body="TEST_" + currentBuild.result.toString() + ".template"
+                    String body = "SCRIPT,template=" + email_body+"${env.shortCommit}";
+                    String to="Maksym_Husak@epam.com"
+                    emailext(subject: subject, body: body, to: to, replyTo: '');
+                   // mail bcc: '', body: 'Success "${env.shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
                 }else {
                       System.exit(1)
                 }
