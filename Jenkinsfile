@@ -3,6 +3,11 @@ def mvnHome
 def Response
 def sonarHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
+String subject = "${env.JOB_NAME} was " + "${env.BUILD_STATUS}";
+String body = "${env.BUILD_STATUS} " + "${env.shortCommit}";
+String to="Maksym_Husak@epam.com"
+env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
+
          try{
             stage('Git-Checkout') {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6da246df-c194-4f83-bdfa-9edee7ca39a2', url: 'https://github.com/Sanwel/JavaApp']]])
@@ -36,12 +41,8 @@ mvnHome = tool 'maven'
             stage('Mail'){
                 if(Response.equals("HTTP/1.1 200")) {
                     println Response
-                    env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
                     println env.shortCommit
-                    String subject = "${env.JOB_NAME} was " + currentBuild.result.toString();
-                    String email_body="TEST_" + currentBuild.result.toString() + ".template"
-                    String body = "SCRIPT,template=" + email_body+"${env.shortCommit}";
-                    String to="Maksym_Husak@epam.com"
+                    env.BUILD_STATUS = "SUCCESS"
                     emailext(subject: subject, body: body, to: to, replyTo: '');
                    // mail bcc: '', body: 'Success "${env.shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
                 }else {
@@ -49,9 +50,8 @@ mvnHome = tool 'maven'
                 }
             }           
 }catch (all) {
-shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
-mail bcc: '', body: 'Error', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
-currentBuild.result = 'FAILURE'
+env.BUILD_STATUS = "FAILURE"
+emailext(subject: subject, body: body, to: to, replyTo: '');    
 }finally {
 
     sh 'docker rm -f Olen'
