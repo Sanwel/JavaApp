@@ -23,10 +23,13 @@ mvnHome = tool 'maven'
                 long start_time = System.currentTimeMillis();
                 long wait_time = 15000;
                 long end_time = start_time + wait_time
+                sleep 10
+                sh '''docker ps -a 
+                netstat -tnlp'''
                 while(Response!="HTTP/1.1 200" && (System.currentTimeMillis() < end_time)){
                     println System.currentTimeMillis()
                     println end_time
-                    def Curl = "curl -I http://10.28.12.209:8181".execute().text
+                    def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
                     def output = sh returnStdout: true, script: 'curl -I http://10.28.12.209:8181/health'
                     println Curl
                     println output
