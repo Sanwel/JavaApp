@@ -24,30 +24,30 @@ mvnHome = tool 'maven'
                 long wait_time = 15000;
                 long end_time = start_time + wait_time
                 while(Response!="HTTP/1.1 200" && (System.currentTimeMillis() < end_time)){
+                    println System.currentTimeMillis()
+                    println end_time
                     def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
                     Response = Curl[0..11]
                     println Response
-                    println System.currentTimeMillis()
-                    println end_time
                 }
                 
             }
-            stage('Mail'){
+/*            stage('Mail'){
                 if(Response=="HTTP/1.1 200") {
                     println Olen
                     mail bcc: '', body: '''"Success" 
                     shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
                 }else {
                       System.exit(0)
-                }
+                }*/
             }           
 }catch (all) {
 mail bcc: '', body: '''"Error" 
 shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
 currentBuild.result = 'FAILURE'
-} /*finally {
+}finally {
 
     sh 'docker rm -f Olen'
     deleteDir()
-}*/
+}
 }
