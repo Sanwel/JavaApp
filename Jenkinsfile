@@ -26,7 +26,7 @@ mvnHome = tool 'maven'
                 while(Response!="HTTP/1.1 200" && (System.currentTimeMillis() < end_time)){
                     println System.currentTimeMillis()
                     println end_time
-                    def Curl = "curl -I http://10.28.12.209:8080".execute().text
+                    def Curl = "curl -I -H 'Content-Type: application/json' http://10.28.12.209:8181".execute().text
                     println Curl
                     Response = Curl[0..11]
                     println Response
