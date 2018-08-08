@@ -23,7 +23,7 @@ mvnHome = tool 'maven'
                 long start_time = System.currentTimeMillis();
                 long wait_time = 15000;
                 long end_time = start_time + wait_time
-                while(Response!="HTTP/1.1 200" ||(System.currentTimeMillis() < end_time){
+                while(Response!="HTTP/1.1 200" ||(System.currentTimeMillis() < end_time)){
                     def Curl = "curl -I http://10.28.12.209:8080".execute().text
                     Response = Curl[0..11]
                     println Response
