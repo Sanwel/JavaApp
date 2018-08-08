@@ -3,11 +3,10 @@ def mvnHome
 def Response
 def sonarHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
+def env.shortCommit
 String subject = "${env.JOB_NAME} was " + "${env.BUILD_STATUS}";
 String body = "${env.BUILD_STATUS} " + "${env.shortCommit}";
 String to="Maksym_Husak@epam.com"
-env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
-
          try{
             stage('Git-Checkout') {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6da246df-c194-4f83-bdfa-9edee7ca39a2', url: 'https://github.com/Sanwel/JavaApp']]])
@@ -43,6 +42,7 @@ env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\
                     println Response
                     println env.shortCommit
                     env.BUILD_STATUS = "SUCCESS"
+                    env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
                     emailext(subject: subject, body: body, to: to, replyTo: '');
                    // mail bcc: '', body: 'Success "${env.shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
                 }else {
