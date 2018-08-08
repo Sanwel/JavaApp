@@ -1,10 +1,8 @@
 pipeline {
     agent any
-node {
-def sonarHome = tool name: 'SonarQube', type: 'hudson.plugind.sonar.SonarRunnerInstallation'
+def sonarHome = tool name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
-String Olen = " "
-    stages {     
+String Olen = " "   
         try{
             stage('Git-Checkout') {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6da246df-c194-4f83-bdfa-9edee7ca39a2', url: 'https://github.com/Sanwel/JavaApp']]])
@@ -14,7 +12,7 @@ String Olen = " "
             }
             stage ('SonarQube testing') {
                 withSonarQubeEnv('sonarqube') {
-                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.sources=src/main/java/rd/pingable/"
+                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.projectVersion=$PROJECT_VERSION -Dsonar.sources=src/main/java/rd/pingable/rest/"
                 }
             }
             stage ('Dockerize') {
@@ -45,7 +43,5 @@ currentBuild.result = 'FAILURE'
 
     sh 'docker rm -f myapp:1'
     deleteDir()
-}
-}
 }
 }
