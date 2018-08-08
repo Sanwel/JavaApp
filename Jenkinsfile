@@ -21,7 +21,7 @@ mvnHome = tool 'maven'
             } 
             stage('Docker Check') {
                 while(Response!="HTTP/1.1 200" ||(System.currentTimeMillis()-startTime)<20000) {
-                    def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
+                    def Curl = "curl -I http://10.28.12.209:8080".execute().text
                     Response = Curl[0..11]
                     println Response
                 }
