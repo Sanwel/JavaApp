@@ -1,9 +1,10 @@
 pipeline {
     agent any
-def sonarHome = tool name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+def mvnHome
+def sonarHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
-String Olen = " "   
-        try{
+def Olen = false
+         try{
             stage('Git-Checkout') {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6da246df-c194-4f83-bdfa-9edee7ca39a2', url: 'https://github.com/Sanwel/JavaApp']]])
             }
@@ -20,11 +21,12 @@ String Olen = " "
                 docker run -d -it -p 8080:8080 myapp:1'''   
             } 
             stage('Docker Check') {
-                while(Olen!="HTTP/1.1 200 OK" ||(System.currentTimeMillis()-startTime)<60000) {
+                while(Response!="HTTP/1.1 200" ||(System.currentTimeMillis()-startTime)<60000) {
                     def Curl = "curl -I http://10.28.12.209:8080/health".execute().text
-                    Olen = Curl[0..15]
-                    println Olen
+                    Response = Curl[0..15]
+                    println Response
                 }
+                
             }
             stage('Mail'){
                 if(Olen) {
