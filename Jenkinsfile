@@ -37,7 +37,7 @@ mvnHome = tool 'maven'
                 if(Response.equals("HTTP/1.1 200")) {
                     println Response
                     env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
-                    println shortCommit
+                    println env.shortCommit
                     mail bcc: '', body: 'Success ${env.shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
                 }else {
                       System.exit(1)
