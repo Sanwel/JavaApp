@@ -1,9 +1,8 @@
-pipeline {
-    agent any
+node {
 def mvnHome
+def Response
 def sonarHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
-def Olen = false
          try{
             stage('Git-Checkout') {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6da246df-c194-4f83-bdfa-9edee7ca39a2', url: 'https://github.com/Sanwel/JavaApp']]])
@@ -29,7 +28,7 @@ def Olen = false
                 
             }
             stage('Mail'){
-                if(Olen) {
+                if(Response=="HTTP/1.1 200") {
                     println Olen
                     mail bcc: '', body: '''"Success" 
                     shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
