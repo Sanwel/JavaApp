@@ -26,14 +26,10 @@ mvnHome = tool 'maven'
                 while(Response!="HTTP/1.1 200" && (System.currentTimeMillis() < end_time)){
                     println System.currentTimeMillis()
                     println end_time
-                    def Curl = "curl -I http://10.28.12.209:8181/health".execute()
-                    def Bufer = new StringBuffer()
-                    proc.consumeProcessErrorStream(b)
-                    print proc.text
-                    println Bufer.toString()
-/*                  println Curl
+                    def Curl = "curl -I http://10.28.12.209:8080".execute().text
+                    println Curl
                     Response = Curl[0..11]
-                    println Response*/
+                    println Response
                 }
                 
             }
