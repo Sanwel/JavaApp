@@ -21,10 +21,10 @@ mvnHome = tool 'maven'
             } 
             stage('Docker Check') {
                 long start_time = System.currentTimeMillis();
-                long wait_time = 10000;
+                long wait_time = 15000;
                 long end_time = start_time + wait_time
                 while(Response!="HTTP/1.1 200" && (System.currentTimeMillis() < end_time)){
-                    def Curl = "curl -I http://10.28.12.209:8080".execute().text
+                    def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
                     Response = Curl[0..11]
                     println Response
                     println System.currentTimeMillis()
