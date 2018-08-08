@@ -45,9 +45,9 @@ mvnHome = tool 'maven'
 mail bcc: '', body: '''"Error" 
 shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
 currentBuild.result = 'FAILURE'
-} finally {
+} /*finally {
 
     sh 'docker rm -f Olen'
     deleteDir()
-}
+}*/
 }
