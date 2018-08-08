@@ -28,6 +28,7 @@ mvnHome = tool 'maven'
                     Response = Curl[0..11]
                     println Response
                     println System.currentTimeMillis()
+                    println end_time
                 }
                 
             }
