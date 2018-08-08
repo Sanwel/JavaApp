@@ -27,6 +27,7 @@ mvnHome = tool 'maven'
                     def Curl = "curl -I http://10.28.12.209:8080".execute().text
                     Response = Curl[0..11]
                     println Response
+                    println System.currentTimeMillis()
                 }
                 
             }
