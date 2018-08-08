@@ -27,30 +27,25 @@ mvnHome = tool 'maven'
                 sh '''docker ps -a 
                 netstat -tnlp'''
                 while(Response!="HTTP/1.1 200" && (System.currentTimeMillis() < end_time)){
-                    println System.currentTimeMillis()
-                    println end_time
                     def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
-                    def output = sh returnStdout: true, script: 'curl -I http://10.28.12.209:8181/health'
-                    println Curl
-                    println output
                     Response = Curl[0..11]
                     println Response
                 }
                 
             }
-/*            stage('Mail'){
-                if(Response=="HTTP/1.1 200") {
+            stage('Mail'){
+                if(Response.equals("HTTP/1.1 200")) {
                     println Olen
-                    mail bcc: '', body: '''"Success" 
-                    shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
+                    shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
+                    mail bcc: '', body: '${shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
                 }else {
-                      System.exit(0)
+                      System.exit(1)
                 }
-            }*/           
+            }           
 }catch (all) {
-/*mail bcc: '', body: '''"Error" 
-shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()''', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
-currentBuild.result = 'FAILURE'*/
+shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
+mail bcc: '', body: '${shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
+currentBuild.result = 'FAILURE'
 }finally {
 
     sh 'docker rm -f Olen'
