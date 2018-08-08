@@ -17,10 +17,10 @@ mvnHome = tool 'maven'
             }*/
             stage ('Dockerize') {
                 sh '''docker build . -t myapp:1
-                docker run -d -it -p 8181:8080 myapp:1'''   
+                docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   
             } 
             stage('Docker Check') {
-                while(Response!="HTTP/1.1 200" ||(System.currentTimeMillis()-startTime)<60000) {
+                while(Response!="HTTP/1.1 200" ||(System.currentTimeMillis()-startTime)<20000) {
                     def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
                     Response = Curl[0..11]
                     println Response
@@ -42,7 +42,7 @@ shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\
 currentBuild.result = 'FAILURE'
 } finally {
 
-    sh 'docker rm -f myapp:1'
+    sh 'docker rm -f Olen'
     deleteDir()
 }
 }
