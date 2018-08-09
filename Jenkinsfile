@@ -2,9 +2,7 @@ node {
 def mvnHome
 def Response
 mvnHome = tool 'maven'
-String body = "${env.BUILD_STATUS} " + "${env.shortCommit}";
-String to="Maksym_Husak@epam.com"
-//         try{
+         try{
             stage('Git-Checkout') {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6da246df-c194-4f83-bdfa-9edee7ca39a2', url: 'https://github.com/Sanwel/JavaApp']]])
             }
@@ -15,11 +13,10 @@ String to="Maksym_Husak@epam.com"
                 def sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                 withSonarQubeEnv('SonarQube') {
                     sh 'echo $PWD'
-                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.java.binaries=target/classes/  -Dsonar.sources=src/ -Dsonar.junit.reportPaths=target/surefire-reports/"
+                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.java.binaries=target/classes/  -Dsonar.sources=src/"
                 }
             }
-}
-/*            stage ('Dockerize') {
+            stage ('Dockerize') {
                 sh '''docker build . -t myapp:1
                 docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   
             } 
@@ -37,7 +34,7 @@ String to="Maksym_Husak@epam.com"
                 }
                 
             }
-            stage('Mail'){
+/*            stage('Mail'){
                 if(Response.equals("HTTP/1.1 200")) {
                     println Response
                     println env.shortCommit
@@ -48,14 +45,19 @@ String to="Maksym_Husak@epam.com"
                 }else {
                       System.exit(1)
                 }
-            }           
+            }*/           
 }catch (all) {
 env.BUILD_STATUS = "FAILURE"
-env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
-emailext(subject: subject, body: body, to: to, replyTo: '');    
 }finally {
 
     sh 'docker rm -f Olen'
     deleteDir()
 }
-}*/
+    post {
+    env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
+    String subject = "${env.JOB_NAME} " + "${env.BUILD_STATUS}";
+    String body = "${env.BUILD_STATUS} " + "${env.shortCommit}";
+    String to="Maksym_Husak@epam.com";
+    emailext(subject: subject, body: body, to: to, replyTo: '');    
+    }
+}
