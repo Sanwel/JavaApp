@@ -1,7 +1,6 @@
 node {
 def mvnHome
 def Response
-def sonarHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
 String body = "${env.BUILD_STATUS} " + "${env.shortCommit}";
 String to="Maksym_Husak@epam.com"
@@ -13,6 +12,7 @@ String to="Maksym_Husak@epam.com"
                 sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
             }
             stage ('SonarQube testing') {
+                def sonarHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                 withSonarQubeEnv('sonarqube') {
                     sh 'ls -la'
                     sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.projectVersion=$PROJECT_VERSION -Dsonar.sources=src/main/java/rd/pingable/rest/"
