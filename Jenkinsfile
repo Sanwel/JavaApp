@@ -3,22 +3,22 @@ def mvnHome
 def Response
 def sonarHome = tool name: 'sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 mvnHome = tool 'maven'
-String subject = "${env.JOB_NAME} was " + "${env.BUILD_STATUS}";
 String body = "${env.BUILD_STATUS} " + "${env.shortCommit}";
 String to="Maksym_Husak@epam.com"
-         try{
+//         try{
             stage('Git-Checkout') {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6da246df-c194-4f83-bdfa-9edee7ca39a2', url: 'https://github.com/Sanwel/JavaApp']]])
             }
             stage ('Build') {
                 sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
             }
-/*            stage ('SonarQube testing') {
+            stage ('SonarQube testing') {
                 withSonarQubeEnv('sonarqube') {
+                    sh 'ls -la'
                     sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.projectVersion=$PROJECT_VERSION -Dsonar.sources=src/main/java/rd/pingable/rest/"
                 }
-            }*/
-            stage ('Dockerize') {
+            }
+/*            stage ('Dockerize') {
                 sh '''docker build . -t myapp:1
                 docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   
             } 
@@ -57,4 +57,4 @@ emailext(subject: subject, body: body, to: to, replyTo: '');
     sh 'docker rm -f Olen'
     deleteDir()
 }
-}
+}*/
