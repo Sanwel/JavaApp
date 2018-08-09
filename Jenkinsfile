@@ -14,7 +14,7 @@ String to="Maksym_Husak@epam.com"
             stage ('SonarQube testing') {
                 def sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                 withSonarQubeEnv('sonarqube') {
-                    sh 'ls -la'
+                    sh 'echo $PWD'
                     sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.projectVersion=$PROJECT_VERSION -Dsonar.sources=src/"
                 }
             }
