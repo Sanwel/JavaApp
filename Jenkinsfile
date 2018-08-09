@@ -25,13 +25,10 @@ String to="Maksym_Husak@epam.com"
                 long start_time = System.currentTimeMillis();
                 long wait_time = 15000;
                 long end_time = start_time + wait_time
-                sleep 10
-                sh '''docker ps -a 
-                netstat -tnlp'''
+                sleep 5
                 while(Response!="HTTP/1.1 200" && (System.currentTimeMillis() < end_time)){
                     def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
                     Response = Curl[0..11]
-                    println Response
                 }
                 
             }
@@ -39,12 +36,9 @@ String to="Maksym_Husak@epam.com"
                 if(Response.equals("HTTP/1.1 200")) {
                     env.shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
                     env.BUILD_STATUS = "SUCCESS"
-                    String body = "${env.BUILD_STATUS} " + "${env.shortCommit}";
+                    String body = "Commit short hash " + "${env.shortCommit}";
                     String subject = "${env.JOB_NAME} was " + "${env.BUILD_STATUS}";
-                    println Response
-                    println env.shortCommit
                     emailext(subject: subject, body: body, to: to, replyTo: '');
-                   // mail bcc: '', body: 'Success "${env.shortCommit}', cc: '', from: '', replyTo: '', subject: 'Build status', to: 'Maksym_Husak@epam.com'
                 }else {
                       System.exit(1)
                 }
