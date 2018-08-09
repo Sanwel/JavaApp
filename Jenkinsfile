@@ -12,8 +12,8 @@ String to="Maksym_Husak@epam.com"
                 sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
             }
             stage ('SonarQube testing') {
-                def sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                withSonarQubeEnv('sonarqube') {
+                def sonarHome = tool 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                withSonarQubeEnv('SonarQube') {
                     sh 'echo $PWD'
                     sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.projectVersion=$PROJECT_VERSION -Dsonar.sources=src/"
                 }
