@@ -2,7 +2,6 @@ node {
 def mvnHome
 def Response
 mvnHome = tool 'maven'
-String body = "${env.BUILD_STATUS} " + "${env.shortCommit}";
 String to="Maksym_Husak@epam.com"
         try{
             stage('Git-Checkout') {
