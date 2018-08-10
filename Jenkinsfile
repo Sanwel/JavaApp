@@ -2,7 +2,6 @@ node {
 def BranchName = '*/master'
 def GitRepository = 'https://github.com/Sanwel/JavaApp'
 def CredentialsId = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
-//def mvnHome = tool 'maven'
 def Response
 def sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 String Recipient ="Maksym_Husak@epam.com"
@@ -19,7 +18,6 @@ String Recipient ="Maksym_Husak@epam.com"
                 ) {
                     sh "mvn clean install"
                 }
-                //sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
                 BUILD_STATUS = "SUCCESS"
             }
             stage ('SonarQube testing') {
@@ -38,6 +36,8 @@ String Recipient ="Maksym_Husak@epam.com"
             timeout (time: 15, unit:'SECONDS') { 
                 stage('Docker Check') {
                     echo 'Check Successful docker container Up'
+                    echo "${env.BUILD_ID - 5}"
+                    echo "${env.BUILD_ID} - 5"
                     sleep 5
                     while(Response!="HTTP/1.1 200") {
                         def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
@@ -58,8 +58,8 @@ String Recipient ="Maksym_Husak@epam.com"
     currentBuild.result = 'FAILURE'
     BUILD_STATUS = "FAILURE"
     emailext(subject: "${env.JOB_NAME} was ${BUILD_STATUS}", body: "Commit short hash " + "${shortCommit}", to: Recipient, replyTo: '');    
-} /*finally {
+} finally {
     sh 'docker rm -f Olen'
-    deleteDir()
-}*/
+   // sh "docker rmi java_app:Build_${env.BUILD_ID - 5}"
+}
 }
