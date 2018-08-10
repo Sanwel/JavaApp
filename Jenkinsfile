@@ -32,8 +32,7 @@ String Recipient ="Maksym_Husak@epam.com"
                 echo 'Run Application in Docker'
                 docker.withTool('Docker'){
                     docker.build("java_app:${env.BUILD_ID}","-f Dockerfile ./")
-                    docker.run('-d --name Olen -p 8181:8080 java_app:"${env.BUILD_ID}"') 
-                    sh 'java -version'
+                    docker.image("java_app:${env.BUILD_ID}").run('-p 8181:8080')
                 }
             }
 /*                sh '''docker build . -t myapp:1
