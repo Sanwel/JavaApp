@@ -33,7 +33,7 @@ String Recipient ="Maksym_Husak@epam.com"
                 agent {
                     docker {
                         image 'java:8-alpine'
-                        args '-p 8181:8080 -d'
+                        args '-p 8181:8080'
                     }
                     sh 'java -jar target/rd-1.0-SNAPSHOT.jar'
                 }    
