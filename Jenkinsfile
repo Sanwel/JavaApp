@@ -30,7 +30,7 @@ String Recipient ="Maksym_Husak@epam.com"
             }
             stage ('Dockerize') {
                 echo 'Run Application in Docker'
-                withTool('Docker'){
+                docker.withTool('Docker'){
                     docker.build("java_app:${env.BUILD_ID}","-f Dockerfile ./")
                     docker.run('-d --name Olen -p 8181:8080 java_app:"${env.BUILD_ID}"') 
                     sh 'java -version'
