@@ -33,9 +33,7 @@ String Recipient ="Maksym_Husak@epam.com"
                 agent {
                     docker { image 'java:8-alpine'}
                 }
-                steps {
-                    sh 'java -jar target/rd-1.0-SNAPSHOT.jar'
-                }
+                sh 'java -jar target/rd-1.0-SNAPSHOT.jar'
 /*                sh '''docker build . -t myapp:1
                 docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   */
             } 
