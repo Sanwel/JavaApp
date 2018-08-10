@@ -38,7 +38,7 @@ String Recipient ="Maksym_Husak@epam.com"
             timeout (time: 15, unit:'SECONDS') { 
                 stage('Docker Check') {
                     echo 'Check Successful docker container Up'
-                    Delete = echo "${env.BUILD_ID}"
+                    Delete = "${env.BUILD_ID}"
                     Olen = Delete - LastBuild
                     println Delete
                     sleep 5
