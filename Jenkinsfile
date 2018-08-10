@@ -36,8 +36,10 @@ String Recipient ="Maksym_Husak@epam.com"
             timeout (time: 15, unit:'SECONDS') { 
                 stage('Docker Check') {
                     echo 'Check Successful docker container Up'
-                    assert "${env.BUILD_ID}" - 5
-                    assert 1 + 2
+                    Delete = assert "${env.BUILD_ID}" - 5
+                    Olen = assert 1 + 2
+                    println Delete
+                    println Olen
                     sleep 5
                     while(Response!="HTTP/1.1 200") {
                         def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
