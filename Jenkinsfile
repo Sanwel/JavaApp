@@ -30,12 +30,14 @@ String Recipient ="Maksym_Husak@epam.com"
             }
             stage ('Dockerize') {
                 echo 'Run Application in Docker'
-                docker.image('java:8').run('-p 8181:8080') { c -> 
+                withTool('Docker'){
+                    docker.build("java_app:${env.BUILD_ID}","-f Dockerfile ./")
+                    docker.run('-d --name Olen -p 8181:8080 java_app:"${env.BUILD_ID}"') 
                     sh 'java -version'
-                }  
+                }
+            }
 /*                sh '''docker build . -t myapp:1
-                docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   */
-            } 
+                docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   */ 
             timeout (time: 15, unit:'SECONDS') { 
                 stage('Docker Check') {
                     echo 'Check Successful docker container Up'
