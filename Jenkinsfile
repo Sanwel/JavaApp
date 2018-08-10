@@ -30,7 +30,9 @@ String Recipient ="Maksym_Husak@epam.com"
             }
             stage ('Dockerize') {
                 echo 'Run Application in Docker'
-                docker.image('java:8').withRun(' -d cp target/rd-1.0-SNAPSHOT.jar / -p 8181:8080 ')  
+                docker.image('java:8').withRun('-p 8181:8080') { c -> 
+                    sh 'java -version'
+                }  
 /*                sh '''docker build . -t myapp:1
                 docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   */
             } 
