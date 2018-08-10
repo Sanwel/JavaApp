@@ -3,6 +3,7 @@ def BranchName = '*/master'
 def GitRepository = 'https://github.com/Sanwel/JavaApp'
 def CredentialsId = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
 def Response
+def Delete
 def LastBuild = 5
 def sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 String Recipient ="Maksym_Husak@epam.com"
@@ -37,7 +38,8 @@ String Recipient ="Maksym_Husak@epam.com"
             timeout (time: 15, unit:'SECONDS') { 
                 stage('Docker Check') {
                     echo 'Check Successful docker container Up'
-                    Delete == env.BUILD_ID - LastBuild
+                    Delete = echo "${env.BUILD_ID}"
+                    Olen = Delete - LastBuild
                     println Delete
                     sleep 5
                     while(Response!="HTTP/1.1 200") {
