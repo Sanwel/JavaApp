@@ -30,9 +30,10 @@ String Recipient ="Maksym_Husak@epam.com"
             }
             stage ('Dockerize') {
                 echo 'Run Application in Docker'
-                agent { dockerfile true }
-                sleep 5
-                sh 'netstat -tnlp'
+                agent {
+                    docker.image ('java:8-alpine').withRun(-d --name "Olen" -it -p 8181:8080 myapp:1    )
+                }
+                sh 'java -jar target/rd-1.0-SNAPSHOT.jar'
 /*                sh '''docker build . -t myapp:1
                 docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   */
             } 
@@ -57,6 +58,7 @@ String Recipient ="Maksym_Husak@epam.com"
             }           
 } catch (all) {
     echo 'Catch Errors'
+    currentBuild.result = 'FAILURE'
     BUILD_STATUS = "FAILURE"
     emailext(subject: "${env.JOB_NAME} was + ${BUILD_STATUS}", body: "Commit short hash " + "${shortCommit}", to: Recipient, replyTo: '');    
 } /*finally {
