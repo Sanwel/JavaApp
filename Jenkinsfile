@@ -5,7 +5,7 @@ def CredentialsId = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
 def mvnHome = tool 'maven'
 def Response
 def sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-String ="Maksym_Husak@epam.com"
+String Recipient ="Maksym_Husak@epam.com"
         try{
             stage('Git-Checkout') {
                 echo 'Git Checkout'
@@ -15,6 +15,7 @@ String ="Maksym_Husak@epam.com"
             stage ('Build') {
                 echo 'Maven Build'
                 sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+                BUILD_STATUS = "SUCCESS"
             }
             stage ('SonarQube testing') {
                 echo 'SonarQube Test'
@@ -23,12 +24,12 @@ String ="Maksym_Husak@epam.com"
                 }
             }
             stage ('Dockerize') {
-                agent {
+/*                agent {
                     docker { image 'java:8-alpine'}
                 }
                 steps {
                     sh 'java -jar target/rd-1.0-SNAPSHOT.jar'
-                }
+                }*/
                 echo 'Run Application in Docker'
                 sh '''docker build . -t myapp:1
                 docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   
@@ -45,18 +46,17 @@ String ="Maksym_Husak@epam.com"
                 
             }
             stage('Mail'){
+                echo 'Send email notification'
                 if(Response.equals("HTTP/1.1 200")) {
-                    env.BUILD_STATUS = "SUCCESS"
-                    String body = "";
-                    String subject = "${env.JOB_NAME} was " + "${env.BUILD_STATUS}";
-                    emailext(subject: subject, body: body, to: to, replyTo: '');
+                    emailext(subject: "${env.JOB_NAME} was " + "${env.BUILD_STATUS}", body: "Commit short hash " + "${shortCommit}", to: Recipient, replyTo: '');
                 }else {
                       System.exit(1)
                 }
             }           
 } catch (all) {
+    echo 'Catch Errors'
     env.BUILD_STATUS = "FAILURE"
-    emailext(subject: "${env.JOB_NAME} was + ${env.BUILD_STATUS}", body: "Commit short hash " + "${env.shortCommit}", to: to, replyTo: '');    
+    emailext(subject: "${env.JOB_NAME} was + ${env.BUILD_STATUS}", body: "Commit short hash " + "${shortCommit}", to: Recipient, replyTo: '');    
 } /*finally {
     sh 'docker rm -f Olen'
     deleteDir()
