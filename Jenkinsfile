@@ -40,7 +40,7 @@ String Recipient ="Maksym_Husak@epam.com"
                     echo 'Check Successful docker container Up'
                     Delete = "${env.BUILD_ID}"
                     Olen = Delete - LastBuild
-                    println Delete
+                    println Olen
                     sleep 5
                     while(Response!="HTTP/1.1 200") {
                         def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
