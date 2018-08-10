@@ -38,8 +38,8 @@ String Recipient ="Maksym_Husak@epam.com"
             timeout (time: 15, unit:'SECONDS') { 
                 stage('Docker Check') {
                     echo 'Check Successful docker container Up'
-                    Delete = "${env.BUILD_ID}"
-                    Olen = Delete - LastBuild
+//                    Delete = "${env.BUILD_ID}"
+                    Olen = env.BUILD_ID.minus(5)
                     println Olen
                     sleep 5
                     while(Response!="HTTP/1.1 200") {
