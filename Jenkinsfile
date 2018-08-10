@@ -3,8 +3,8 @@ def BranchName = '*/master'
 def GitRepository = 'https://github.com/Sanwel/JavaApp'
 def CredentialsId = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
 def Response
-def Delete
 def LastBuild = 5
+def Int = env.BUILD_ID.toInteger().minus(LastBuild)
 def sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 String Recipient ="Maksym_Husak@epam.com"
         try{
@@ -38,10 +38,8 @@ String Recipient ="Maksym_Husak@epam.com"
             timeout (time: 15, unit:'SECONDS') { 
                 stage('Docker Check') {
                     echo 'Check Successful docker container Up'
-                    Delete = env.BUILD_ID.toInteger()
-                    Olen = Delete.minus(5)
-                    println Olen
                     sleep 5
+                    println Int
                     while(Response!="HTTP/1.1 200") {
                         def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
                         Response = Curl[0..11]
@@ -63,6 +61,6 @@ String Recipient ="Maksym_Husak@epam.com"
     emailext(subject: "${env.JOB_NAME} was ${BUILD_STATUS}", body: "Commit short hash " + "${shortCommit}", to: Recipient, replyTo: '');    
 } finally {
     sh 'docker rm -f Olen'
-   // sh "docker rmi java_app:Build_${env.BUILD_ID - 5}"
+   // sh "docker rmi java_app:Build_"
 }
 }
