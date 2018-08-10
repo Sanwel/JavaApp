@@ -10,7 +10,7 @@ String Recipient ="Maksym_Husak@epam.com"
             stage('Git-Checkout') {
                 echo 'Git Checkout'
                 checkout([$class: 'GitSCM', branches: [[name: BranchName]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: CredentialsId , url: GitRepository ]]])
-                def shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
+                shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
             }
             stage ('Build') {
                 echo 'Maven Build'
