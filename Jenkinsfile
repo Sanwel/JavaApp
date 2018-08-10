@@ -32,9 +32,10 @@ String Recipient ="Maksym_Husak@epam.com"
                 echo 'Run Application in Docker'
                 agent {
                     docker {
-                        image 'java:8-alpine'
+                        image 'java:8'
                         args '-p 8181:8080'
                     }
+                    sh 'java -version'
                     sh 'java -jar target/rd-1.0-SNAPSHOT.jar'
                 }    
 /*                sh '''docker build . -t myapp:1
