@@ -31,7 +31,6 @@ String Recipient ="Maksym_Husak@epam.com"
             stage ('Dockerize') {
                 echo 'Run Application in Docker'
                 agent { dockerfile true }
-                }
                 sleep 5
                 sh 'netstat -tnlp'
 /*                sh '''docker build . -t myapp:1
