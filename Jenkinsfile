@@ -13,7 +13,7 @@ String Recipient ="Maksym_Husak@epam.com"
                 shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:\'%h\'").trim()
             }
             stage ('Build') {
-                echo 'Maven Build']
+                echo 'Maven Build'
                 withMaven (
                     maven: 'maven'
                 ) {
