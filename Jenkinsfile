@@ -35,6 +35,8 @@ String Recipient ="Maksym_Husak@epam.com"
                         image 'java:8'
                         args '-p 8181:8080'
                     }
+                }
+                steps {
                     sh 'java -version'
                     sh 'java -jar target/rd-1.0-SNAPSHOT.jar'
                 }    
@@ -48,6 +50,7 @@ String Recipient ="Maksym_Husak@epam.com"
                     while(Response!="HTTP/1.1 200") {
                         def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
                         Response = Curl[0..11]
+                        println Response
                     }
                 }
                 
@@ -64,7 +67,7 @@ String Recipient ="Maksym_Husak@epam.com"
     echo 'Catch Errors'
     currentBuild.result = 'FAILURE'
     BUILD_STATUS = "FAILURE"
-    emailext(subject: "${env.JOB_NAME} was + ${BUILD_STATUS}", body: "Commit short hash " + "${shortCommit}", to: Recipient, replyTo: '');    
+    emailext(subject: "${env.JOB_NAME} was ${BUILD_STATUS}", body: "Commit short hash " + "${shortCommit}", to: Recipient, replyTo: '');    
 } /*finally {
     sh 'docker rm -f Olen'
     deleteDir()
