@@ -30,30 +30,19 @@ String Recipient ="Maksym_Husak@epam.com"
             }
             stage ('Dockerize') {
                 echo 'Run Application in Docker'
-                agent {
-                    docker {
-                        image 'java:8'
-                        args '-p 8181:8080'
-                    }
-                }
-                steps {
-                    sh 'java -version'
-                    sh 'java -jar target/rd-1.0-SNAPSHOT.jar'
-                }    
+                docker.image('java:8').withRun(' -d cp target/rd-1.0-SNAPSHOT.jar / -p 8181:8080 --entrypoint "java -jar /rd-1.0-SNAPSHOT.jar" ')  
 /*                sh '''docker build . -t myapp:1
                 docker run -d --name Olen -it -p 8181:8080 myapp:1 '''   */
             } 
-            stage('Docker Check') {
-                echo 'Check Successful docker container Up'
-                sleep 5
-                timeout (time: 15, unit:'SECONDS') {
+            timeout (time: 15, unit:'SECONDS') { 
+                stage('Docker Check') {
+                    echo 'Check Successful docker container Up'
+                    sleep 5
                     while(Response!="HTTP/1.1 200") {
                         def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
                         Response = Curl[0..11]
-                        println Response
                     }
-                }
-                
+                }    
             }
             stage('Mail'){
                 echo 'Send email notification'
