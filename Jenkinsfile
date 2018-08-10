@@ -31,7 +31,7 @@ String Recipient ="Maksym_Husak@epam.com"
             stage ('Dockerize') {
                 echo 'Run Application in Docker'
                 agent {
-                    docker ( image 'java:8-alpine')
+                    docker { image 'java:8-alpine' }
                 }
                 sh 'java -jar target/rd-1.0-SNAPSHOT.jar'
 /*                sh '''docker build . -t myapp:1
