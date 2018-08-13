@@ -6,9 +6,22 @@ node {
     def GitRepository = 'https://github.com/Sanwel/JavaApp'
     def CredentialsId = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
     def Response
+    def SonarKey = 'Simple-App'
+    def SonarBinariesPath = 'target/classes/'
+    def SonarName = 'SonarQube'
+    def SonarScannerName = 'sonarscanner'
+    def MavenName = 'maven'
+    def DockerName = 'Docker'
+    def DockerFrom = '8080'
+    def DockerTo = '8181'
+    def DockerContainerName = 'Olen'
+    def DockerImageName = 'java_app:Build_'
+    def ApplicationIP = 'http://10.28.12.209:8181/health'
+    def SonarSource = 'src/'
+    def TimeOutCheck = 15
     def LastBuild = 1
     def Int = env.BUILD_ID.toInteger().minus(LastBuild)
-    def sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+    def sonarHome = tool name: SonarScannerName, type: 'hudson.plugins.sonar.SonarRunnerInstallation'
     String Recipient ='Maksym_Husak@epam.com'
         try{
             //Git-Checkout stage with getting commit hash
@@ -20,7 +33,7 @@ node {
             //maven Build stage
             stage ('Build') {
                 echo 'Maven Build'
-                withMaven ( maven: 'maven' ) {
+                withMaven ( maven: MavenName ) {
                     sh "mvn clean install"
                 }
                 BUILD_STATUS = 'SUCCESS'
@@ -28,25 +41,25 @@ node {
             //Sonar Analyzing stage
             stage ('SonarQube testing') {
                 echo 'SonarQube Test'
-                withSonarQubeEnv('SonarQube') {
-                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=Simple-App -Dsonar.projectName=Simple-App -Dsonar.java.binaries=target/classes/  -Dsonar.sources=src/"
+                withSonarQubeEnv(SonarName) {
+                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey= ${SonarKey} -Dsonar.projectName=${SonarKey} -Dsonar.java.binaries=${SonarBinariesPath}  -Dsonar.sources=${SonarSource}"
                 }
             }
             //Dockerize Application and run it
             stage ('Dockerize') {
                 echo 'Run Application in Docker'
-                docker.withTool('Docker') {
-                    docker.build("java_app:Build_${env.BUILD_ID}","-f Dockerfile ./")
-                    docker.image("java_app:Build_${env.BUILD_ID}").run('-p 8181:8080 --name Olen')
+                docker.withTool(DockerName) {
+                    docker.build("${DockerImageName}${env.BUILD_ID}","-f Dockerfile ./")
+                    docker.image("${DockerImageName}${env.BUILD_ID}").run(" -p ${DockerTo}:${DockerFrom} --name ${DockerContainerName}")
                 }
             }
             // Checking successful dockerize stage
-            timeout (time: 15, unit:'SECONDS') { 
+            timeout (time: TimeOutCheck, unit:'SECONDS') { 
                 stage('Docker Check') {
                     echo 'Check Successful docker container Up'
                     sleep 5
                     while(Response!="HTTP/1.1 200") {
-                        def Curl = "curl -I http://10.28.12.209:8181/health".execute().text
+                        def Curl = "curl -I ${ApplicationIP}".execute().text
                         Response = Curl[0..11]
                     }
                 }    
@@ -71,9 +84,9 @@ node {
         //Clean up 
         finally {
             stage('CleanUp') {
-                sh 'docker rm -f Olen'
-                sh "docker rmi java_app:Build_${Int} > /dev/null 2>&1"
-                sh 'git clean -ffdx'
+                sh "docker rm -f ${DockerContainerName}"
+                sh "docker rmi ${DockerImageName}${Int} > /dev/null 2>&1"
+                sh "git clean -ffdx"
             }
         }
 }
