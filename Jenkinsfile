@@ -58,7 +58,7 @@ node {
             timeout (time: TimeOutCheck, unit:'SECONDS') { 
                 stage('Docker Check') {
                     echo 'Check Successful docker container Up'
-                    sleep 5
+                    sleep 10
                     while(Response!="HTTP/1.1 200") {
                         def Curl = "curl -I ${ApplicationIP}".execute().text.
                         println Curl
