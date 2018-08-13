@@ -42,7 +42,7 @@ node {
             stage ('SonarQube testing') {
                 echo 'SonarQube Test'
                 withSonarQubeEnv(SonarName) {
-                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey= ${SonarKey} -Dsonar.projectName=${SonarKey} -Dsonar.java.binaries=${SonarBinariesPath}  -Dsonar.sources=${SonarSource}"
+                    sh "${sonarHome}/bin/sonar-scanner -Dsonar.projectKey=${SonarKey} -Dsonar.projectName=${SonarKey} -Dsonar.java.binaries=${SonarBinariesPath}  -Dsonar.sources=${SonarSource}"
                 }
             }
             //Dockerize Application and run it
