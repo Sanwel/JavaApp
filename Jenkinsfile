@@ -9,7 +9,7 @@ node {
     def LastBuild = 1
     def Int = env.BUILD_ID.toInteger().minus(LastBuild)
     def sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-    String Recipient ="Maksym_Husak@epam.com"
+    String Recipient ='Maksym_Husak@epam.com'
         try{
             //Git-Checkout stage with getting commit hash
             stage('Git-Checkout') {
@@ -23,7 +23,7 @@ node {
                 withMaven ( maven: 'maven' ) {
                     sh "mvn clean install"
                 }
-                BUILD_STATUS = "SUCCESS"
+                BUILD_STATUS = 'SUCCESS'
             }
             //Sonar Analyzing stage
             stage ('SonarQube testing') {
@@ -70,8 +70,10 @@ node {
         }
         //Clean up 
         finally {
-            sh 'docker rm -f Olen'
-            sh "docker rmi java_app:Build_${Int} > /dev/null 2>&1"
-            sh 'git clean -ffdx'
+            stage('CleanUp') {
+                sh 'docker rm -f Olen'
+                sh "docker rmi java_app:Build_${Int} > /dev/null 2>&1"
+                sh 'git clean -ffdx'
+            }
         }
 }
