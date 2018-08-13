@@ -22,6 +22,7 @@ node {
     def LastBuild = 1
     def Int = env.BUILD_ID.toInteger().minus(LastBuild)
     def sonarHome = tool name: SonarScannerName, type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+    def MavenTargets = 'clean install'
     String Recipient ='Maksym_Husak@epam.com'
         try{
             //Git-Checkout stage with getting commit hash
@@ -34,7 +35,7 @@ node {
             stage ('Build') {
                 echo 'Maven Build'
                 withMaven ( maven: MavenName ) {
-                    sh "mvn clean install"
+                    sh "mvn ${MavenTargets}"
                 }
                 BUILD_STATUS = 'SUCCESS'
             }
