@@ -16,7 +16,7 @@ node {
     def DockerTo = '8181'
     def DockerContainerName = 'Olen'
     def DockerImageName = 'java_app:Build_'
-    def ApplicationIP = ' http://10.28.12.209:8181/health'
+    def ApplicationIP = 'http://10.28.12.209:8181/health'
     def SonarSource = 'src/'
     def TimeOutCheck = 15
     def LastBuild = 1
@@ -59,7 +59,7 @@ node {
                     echo 'Check Successful docker container Up'
                     sleep 5
                     while(Response!="HTTP/1.1 200") {
-                        def Curl = "curl -I ${ApplicationIP}".execute().text
+                        def Curl = "curl -I ${ApplicationIP}".execute().text.
                         println Curl
                         Response = Curl[0..11]
                     }
