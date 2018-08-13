@@ -60,7 +60,8 @@ node {
                     echo 'Check Successful docker container Up'
                     sleep 10
                     while(Response!="HTTP/1.1 200") {
-                        def Curl = "curl -I ${ApplicationIP}".execute().text.
+                        println ApplicationIP
+                        def Curl = " curl -I ${ApplicationIP} ".execute().text.
                         println Curl
                         Response = Curl[0..11]
                     }
