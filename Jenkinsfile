@@ -26,7 +26,7 @@ node ("master") {
 
         def selectedJdk = "Oracle JDK 8"
         def selectedMaven = "maven"
-	echo Colorizer.info("Executing maven stage")
+        echo Colorizer.info("Executing maven stage")
         stageMavenExec {
             jdkVersion   = selectedJdk
             mavenVersion = selectedMaven
