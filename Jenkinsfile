@@ -24,9 +24,9 @@ node ("master") {
             GitRepository = 'https://github.com/Sanwel/JavaApp'
         }
 
-	    def selectedJdk = "Oracle JDK 8"
+	def selectedJdk = "Oracle JDK 8"
         def selectedMaven = "maven"
-	    echo Colorizer.info("Executing maven stage")
+	echo Colorizer.info("Executing maven stage")
         stageMavenExec {
             jdkVersion   = selectedJdk
             mavenVersion = selectedMaven
