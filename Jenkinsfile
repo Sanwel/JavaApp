@@ -78,7 +78,7 @@ node ("master") {
         echo Colorizer.info('Executing CleanUp Stage')
         cleanUpStage {
             DockerContainerName = 'Olen'
-            DockerImageName = 'java_app:Build'
+            DockerImageName = 'java_app:Build_'
         }
     }
 }
