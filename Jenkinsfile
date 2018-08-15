@@ -20,10 +20,10 @@ String response
         try {
             echo Colorizer.info("Executing Checkout stage")
             stageGitCheckout {
-                BranchName =  '*/master'
-                SubmoduleConfig = false
-                CredentialsID = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
-                GitRepository = 'https://github.com/Sanwel/JavaApp'
+                branchName =  '*/master'
+                submoduleConfig = false
+                credentialsID = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
+                gitRepository = 'https://github.com/Sanwel/JavaApp'
             }
 
             def selectedJdk = "Oracle JDK 8"
@@ -38,33 +38,33 @@ String response
 
             echo Colorizer.info("Executing Sonar Scanner stage")
             stageSonarScaner {
-                SonarName = 'SonarQube'
-                SonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                SonarKey = "-Dsonar.projectKey='Simple-App'"
-                SonarProj = "-Dsonar.projectName='Simple-App'"
-                Sonarbinaries = "-Dsonar.java.binaries='target/classes/'"
-                SonarSource = "-Dsonar.sources='src/'"
+                sonarName = 'SonarQube'
+                sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                sonarKey = "-Dsonar.projectKey='Simple-App'"
+                sonarProj = "-Dsonar.projectName='Simple-App'"
+                sonarbinaries = "-Dsonar.java.binaries='target/classes/'"
+                sonarSource = "-Dsonar.sources='src/'"
             }   
 
             echo Colorizer.info("Executing Dockerize stage")
             stageDockerize {
-                DockerName = 'Docker'
-                DockerImageName = 'java_app:Build_'
-                DockerPortInbound = '8080'
-                DockerPortOutbound = '8181'
-                DockerContainerName = 'Olen'
+                dockerName = 'Docker'
+                dockerImageName = 'java_app:Build_'
+                dockerPortInbound = '8080'
+                dockerPortOutbound = '8181'
+                dockerContainerName = 'Olen'
             }
 
             echo Colorizer.info("Executing Docker Check stage")
             response = stageDockerCheck {
-                TimeOutCheck = 15
-                ApplicationIP = ' http://10.28.12.209:8181/health'
+                timeOutCheck = 15
+                applicationIP = ' http://10.28.12.209:8181/health'
             }
 
             echo Colorizer.info("Executing Send Email stage")
             stageEmail {
-                Check = response
-                Recipient = 'Maksym_Husak@epam.com'
+                check = response
+                recipient = 'Maksym_Husak@epam.com'
             }
         }
         catch (all) {
@@ -76,8 +76,8 @@ String response
         finally {
             echo Colorizer.info('Executing CleanUp Stage')
             stageCleanUp {
-                DockerContainerName = 'Olen'
-                DockerImageName = 'java_app:Build_'
+                dockerContainerName = 'Olen'
+                dockerImageName = 'java_app:Build_'
             }
         }
     }
