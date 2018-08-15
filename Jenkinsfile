@@ -14,11 +14,12 @@ import com.lab.build.Colorizer
 @Library(value='initialLibs', changelog=false) _
 
 node ("master") {
+env.BUILD_STATUS = 'SUCCESS'
+String response
     try {
-        wrap([$class: 'TimestamperBuildWrapper']) {
-            env.BUILD_STATUS = 'SUCCESS'
+        wrap([$class: 'AnsiColorBuildWrapper']) { 
             echo Colorizer.info("Executing Checkout stage")
-            gitCheckoutStage {
+            stageGitCheckout {
                 BranchName =  '*/master'
                 SubmoduleConfig = false
                 CredentialsID = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
@@ -28,7 +29,7 @@ node ("master") {
             def selectedJdk = "Oracle JDK 8"
             def selectedMaven = "maven"
             echo Colorizer.info("Executing maven stage")
-            mavenBuildStage {
+            stageMavenBuild {
                 jdkVersion   = selectedJdk
                 mavenVersion = selectedMaven
                 jvmOptions   = '-Xms768m -Xmx768m'
@@ -36,7 +37,7 @@ node ("master") {
             }
 
             echo Colorizer.info("Executing Sonar Scanner stage")
-            sonarScanerStage {
+            stageSonarScaner {
                 SonarName = 'SonarQube'
                 SonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
                 SonarKey = "-Dsonar.projectKey='Simple-App'"
@@ -46,23 +47,22 @@ node ("master") {
             }   
 
             echo Colorizer.info("Executing Dockerize stage")
-            dockerizeStage {
+            stageDockerize {
                 DockerName = 'Docker'
                 DockerImageName = 'java_app:Build_'
-                DockerFrom = '8080'
-                DockerTo = '8181'
+                DockerPortOutbound = '8080'
+                DockerPortInbound = '8181'
                 DockerContainerName = 'Olen'
             }
 
             echo Colorizer.info("Executing Docker Check stage")
-            String response
-            response = dockerCheckStage {
+            response = stageDockerCheck {
                 TimeOutCheck = 15
                 ApplicationIP = ' http://10.28.12.209:8181/health'
             }
 
             echo Colorizer.info("Executing Send Email stage")
-            emailStage {
+            stageEmail {
                 Check = response
                 Recipient = 'Maksym_Husak@epam.com'
             }
@@ -76,7 +76,7 @@ node ("master") {
     }
     finally {
         echo Colorizer.info('Executing CleanUp Stage')
-        cleanUpStage {
+        stageCleanUp {
             DockerContainerName = 'Olen'
             DockerImageName = 'java_app:Build_'
         }
