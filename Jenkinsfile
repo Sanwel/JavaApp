@@ -50,8 +50,8 @@ String response
             stageDockerize {
                 DockerName = 'Docker'
                 DockerImageName = 'java_app:Build_'
-                DockerPortOutbound = '8080'
-                DockerPortInbound = '8181'
+                DockerPortInbound = '8080'
+                DockerPortOutbound = '8181'
                 DockerContainerName = 'Olen'
             }
 
