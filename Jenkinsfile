@@ -16,8 +16,8 @@ import com.lab.build.Colorizer
 node ("master") {
 env.BUILD_STATUS = 'SUCCESS'
 String response
-    try {
-        wrap([$class: 'AnsiColorBuildWrapper']) { 
+    wrap([$class: 'AnsiColorBuildWrapper']) {
+        try {
             echo Colorizer.info("Executing Checkout stage")
             stageGitCheckout {
                 BranchName =  '*/master'
@@ -67,18 +67,18 @@ String response
                 Recipient = 'Maksym_Husak@epam.com'
             }
         }
-    }
-    catch (all) {
-        echo Colorizer.info('Catch Errors')
-        currentBuild.result = 'FAILURE'
-        env.BUILD_STATUS = 'FAILURE'
-        emailext(subject: "${env.JOB_NAME} was ${env.BUILD_STATUS}", body: "Commit short hash " + "${env.shortCommit}", to: 'Maksym_Husak@epam.com', replyTo: '');
-    }
-    finally {
-        echo Colorizer.info('Executing CleanUp Stage')
-        stageCleanUp {
-            DockerContainerName = 'Olen'
-            DockerImageName = 'java_app:Build_'
+        catch (all) {
+            echo Colorizer.info('Catch Errors')
+            currentBuild.result = 'FAILURE'
+            env.BUILD_STATUS = 'FAILURE'
+            emailext(subject: "${env.JOB_NAME} was ${env.BUILD_STATUS}", body: "Commit short hash " + "${env.shortCommit}", to: 'Maksym_Husak@epam.com', replyTo: '');
+        }
+        finally {
+            echo Colorizer.info('Executing CleanUp Stage')
+            stageCleanUp {
+                DockerContainerName = 'Olen'
+                DockerImageName = 'java_app:Build_'
+            }
         }
     }
 }
