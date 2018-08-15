@@ -14,20 +14,33 @@ import com.lab.build.Colorizer
 @Library(value='initialLibs', changelog=false) _
 
 node ("master") {
+// define variables
 env.BUILD_STATUS = 'SUCCESS'
 String response
+def selectedJdk = 'Oracle JDK 8'
+def selectedMaven = 'maven'
+String gitJavaRepo = 'https://github.com/Sanwel/JavaApp'
+// Please add human readable creds id in jenkins config and here
+String credsJavaRepo   = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
+String gitJavaBranch = '*/master'
+String sonarQubeName = 'SonarQube'
+String sonarPrj = 'Simple-App'
+String sonarSrc = 'src/'
+String sonarJavaBins = 'target/classes/'
+
+    
     wrap([$class: 'AnsiColorBuildWrapper']) {
         try {
             echo Colorizer.info("Executing Checkout stage")
             stageGitCheckout {
-                branchName =  '*/master'
+                gitRepository = gitJavaRepo
+                credentialsID = credsJavaRepo
+                branchName =  gitJavaBranch
+                // I think this param "submoduleConfig" is not needed. Please remove it from here and hardcode it in libs
                 submoduleConfig = false
-                credentialsID = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
-                gitRepository = 'https://github.com/Sanwel/JavaApp'
+                // You can add checkout subdirectory if you want
             }
 
-            def selectedJdk = "Oracle JDK 8"
-            def selectedMaven = "maven"
             echo Colorizer.info("Executing maven stage")
             stageMavenBuild {
                 jdkVersion   = selectedJdk
@@ -38,12 +51,14 @@ String response
 
             echo Colorizer.info("Executing Sonar Scanner stage")
             stageSonarScaner {
-                sonarName = 'SonarQube'
+                sonarName = sonarQubeName
+                // is this working? not sure.
                 sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                sonarKey = "-Dsonar.projectKey='Simple-App'"
-                sonarProj = "-Dsonar.projectName='Simple-App'"
-                sonarbinaries = "-Dsonar.java.binaries='target/classes/'"
-                sonarSource = "-Dsonar.sources='src/'"
+                // please hide parameters into lib and pass only values. -Dsonar.projectKey= -Dsonar.projectName= not needed here
+                sonarKey = "-Dsonar.projectKey='${sonarPrj}'"
+                sonarProj = "-Dsonar.projectName='${Simple-App}'"
+                sonarbinaries = "-Dsonar.java.binaries='${sonarJavaBins}'"
+                sonarSource = "-Dsonar.sources='${sonarSrc}'"
             }   
 
             echo Colorizer.info("Executing Dockerize stage")
