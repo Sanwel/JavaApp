@@ -15,28 +15,28 @@ import com.lab.build.Colorizer
 
 node ("master") {
 env.BUILD_STATUS = 'SUCCESS'
-String response
-def gitCredential = 'gitHub'
-def directoryForCheckout = './'
-def selectedBranchName = '*/master'
-def selectedRepository = 'https://github.com/Sanwel/JavaApp'
-def selectedMaven = 'maven'
-def currentMavenCommand = 'mvn clean install'
-def currentJvmOptions = '-Xms768m -Xmx768m'
-def selectedJdk = 'Oracle JDK 8'
-def selectedSonarName = 'SonarQube'
-def selectedSonarScanner = 'sonarscanner'
-def currentSonarKey = 'Simple-App'
-def pathToSonarBinaries = 'target/classes/'
-def pathToSonarSource = 'src/'
-def selectedDocker = 'Docker'
-def currentDockerImagName = 'java_app:Byild_'
-def dockerPortIn = '8080'
-def dockerProtOut = '8181'
-def currentDockerConatinerName = 'Olen'
-def currentTimeOut = 15
-def currentAppIP = ' http://10.28.12.209:8181/health'
-def currentRecipient = 'Maksym_Husak@epam.com'
+    String response
+    def gitCredential = 'gitHub'
+    def directoryForCheckout = './'
+    def selectedBranchName = '*/master'
+    def selectedRepository = 'https://github.com/Sanwel/JavaApp'
+    def selectedMaven = 'maven'
+    def currentMavenCommand = 'mvn clean install'
+    def currentJvmOptions = '-Xms768m -Xmx768m'
+    def selectedJdk = 'Oracle JDK 8'
+    def selectedSonarName = 'SonarQube'
+    def selectedSonarScanner = 'sonarscanner'
+    def currentSonarKey = 'Simple-App'
+    def pathToSonarBinaries = 'target/classes/'
+    def pathToSonarSource = 'src/'
+    def selectedDocker = 'Docker'
+    def currentDockerImagName = 'java_app:Byild_'
+    def dockerPortIn = '8080'
+    def dockerProtOut = '8181'
+    def currentDockerConatinerName = 'Olen'
+    def currentTimeOut = 15
+    def currentAppIP = ' http://10.28.12.209:8181/health'
+    def currentRecipient = 'Maksym_Husak@epam.com'
     wrap([$class: 'AnsiColorBuildWrapper']) {
         try {
             echo Colorizer.info("Executing Checkout stage")
