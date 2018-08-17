@@ -16,68 +16,84 @@ import com.lab.build.Colorizer
 node ("master") {
 env.BUILD_STATUS = 'SUCCESS'
 String response
+def gitCredential = 'gitHub'
+def selectedBranchName = '*/master'
+def selectedRepository = 'https://github.com/Sanwel/JavaApp'
+def selectedMaven = 'maven'
+def currentMavenCommand = 'mvn clean install'
+def currentJvmOptions = '-Xms768m -Xmx768m'
+def selectedJdk = 'Oracle JDK 8'
+def selectedSonarName = 'SonarQube'
+def selectedSonarScanner = 'sonarscanner'
+def currentSonarKey = 'Simple-App'
+def pathToSonarBinaries = 'target/classes/'
+def pathToSonarSource = 'src/'
+def selectedDocker = 'Docker'
+def currentDockerImagName = 'java_app:Byild_'
+def dockerPortIn = '8080'
+def dockerProtOut = '8181'
+def currentDockerConatinerName = 'Olen'
+def currentTimeOut = 15
+def currentAppIP = ' http://10.28.12.209:8181/health'
+def currentRecipient = 'Maksym_Husak@epam.com'
     wrap([$class: 'AnsiColorBuildWrapper']) {
         try {
             echo Colorizer.info("Executing Checkout stage")
             stageGitCheckout {
-                branchName =  '*/master'
-                submoduleConfig = false
-                credentialsID = '6da246df-c194-4f83-bdfa-9edee7ca39a2'
-                gitRepository = 'https://github.com/Sanwel/JavaApp'
+                branchName =  selectedBranchName
+                credentialsID = gitCredential
+                gitRepository = selectedRepository
             }
-
-            def selectedJdk = "Oracle JDK 8"
-            def selectedMaven = "maven"
             echo Colorizer.info("Executing maven stage")
             stageMavenBuild {
                 jdkVersion   = selectedJdk
                 mavenVersion = selectedMaven
-                jvmOptions   = '-Xms768m -Xmx768m'
-                mavenCommand = "mvn clean install"
+                jvmOptions   = currentJvmOptions
+                mavenCommand = currentMavenCommand
             }
 
             echo Colorizer.info("Executing Sonar Scanner stage")
             stageSonarScaner {
-                sonarName = 'SonarQube'
-                sonarHome = tool name: 'sonarscanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                sonarKey = "-Dsonar.projectKey='Simple-App'"
-                sonarProj = "-Dsonar.projectName='Simple-App'"
-                sonarbinaries = "-Dsonar.java.binaries='target/classes/'"
-                sonarSource = "-Dsonar.sources='src/'"
+                sonarName = selectedSonarName
+                sonarHome = tool name: selectedSonarScanner, type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                sonarKey = currentSonarKey
+                sonarProj = currentSonarKey
+                sonarbinaries = pathToSonarBinaries
+                sonarSource = pathToSonarSource
             }   
 
             echo Colorizer.info("Executing Dockerize stage")
             stageDockerize {
-                dockerName = 'Docker'
-                dockerImageName = 'java_app:Build_'
-                dockerPortInbound = '8080'
-                dockerPortOutbound = '8181'
-                dockerContainerName = 'Olen'
+                dockerName = selectedDocker
+                dockerImageName = currentDockerImagName
+                dockerPortInbound = dockerPortIn
+                dockerPortOutbound = dockerProtOut
+                dockerContainerName = currentDockerConatinerName
             }
 
             echo Colorizer.info("Executing Docker Check stage")
             response = stageDockerCheck {
-                timeOutCheck = 15
-                applicationIP = ' http://10.28.12.209:8181/health'
+                timeOutCheck = currentTimeOut
+                applicationIP = currentAppIP
             }
 
             echo Colorizer.info("Executing Send Email stage")
             stageEmail {
                 check = response
-                recipient = 'Maksym_Husak@epam.com'
+                recipient = currentRecipient
             }
         }
         catch (all) {
             echo Colorizer.info('Catch Errors')
             currentBuild.result = 'FAILURE'
             env.BUILD_STATUS = 'FAILURE'
-            emailext(subject: "${env.JOB_NAME} was ${env.BUILD_STATUS}", body: "Commit short hash " + "${env.shortCommit}", to: 'Maksym_Husak@epam.com', replyTo: '');
+            email   ext(subject: "${env.JOB_NAME} was ${env.BUILD_STATUS}", body: "Commit short hash " + "${env.shortCommit}", to: currentRecipient, replyTo: '');
         }
         finally {
             echo Colorizer.info('Executing CleanUp Stage')
             stageCleanUp {
-                dockerContainerName = 'Olen'
-                dockerImageName = 'java_app:Build_'
+                dockerContainerName = currentDockerConatinerName
+                dockerImageName = currentDockerImagName
             }
         }
     }
