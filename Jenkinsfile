@@ -17,6 +17,7 @@ node ("master") {
 env.BUILD_STATUS = 'SUCCESS'
 String response
 def gitCredential = 'gitHub'
+def directoryForCheckout = './'
 def selectedBranchName = '*/master'
 def selectedRepository = 'https://github.com/Sanwel/JavaApp'
 def selectedMaven = 'maven'
@@ -40,6 +41,7 @@ def currentRecipient = 'Maksym_Husak@epam.com'
         try {
             echo Colorizer.info("Executing Checkout stage")
             stageGitCheckout {
+                remoteDir = direcotyForCheckout
                 branchName =  selectedBranchName
                 credentialsID = gitCredential
                 gitRepository = selectedRepository
